@@ -1,0 +1,33 @@
+---
+- name: "sec07 | sec07-main | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec07 | sec07-main | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec07 | sec07-main | Import subsection 01 - System File Permissions"
+  ansible.builtin.import_tasks:
+    file: sec07/sec07-01.yml
+  when: hardening_sec07_01
+  tags:
+    - always
+
+- name: "sec07 | sec07-main | Import subsection 02 - Local User and Group Settings"
+  ansible.builtin.import_tasks:
+    file: sec07/sec07-02.yml
+  when: hardening_sec07_02
+  tags:
+    - always
+
+...

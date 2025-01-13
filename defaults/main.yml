@@ -1,2 +1,199 @@
 ---
-# defaults file for cis-ubuntu24
+# defaults file for ubuntu24-cis
+
+## --------------------------------------------------------
+## Section: Common settings
+#
+# Select which section should be applied
+
+## Section: 01 Initial Setup
+hardening_sec01: true
+## Section: 02 Services
+hardening_sec02: true
+## Section: 03 Network
+hardening_sec03: true
+## Section: 04 Host Based Firewall
+hardening_sec04: true
+## Section: 05 Access Control
+hardening_sec05: true
+## Section: 06 Logging and auditing
+hardening_sec06: true
+## Section: 07 System Maintenance
+hardening_sec07: true
+
+# Some common settings
+hardening_ansible_console_ip: []
+hardening_admin_device_ip: []
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section: 01 Initial Setup
+#
+# Select which subsection should be applied
+# and also included settings.
+
+## 1.1 Filesystem
+hardening_sec01_01: true
+
+## 1.2 Package Management
+hardening_sec01_02: true
+
+## 1.3 Mandatory Access Control (MAC)
+hardening_sec01_03: true
+
+## 1.4 Configure Bootloader
+hardening_sec01_04: true
+
+## 1.5 Configure Additional Process Hardening
+hardening_sec01_05: true
+
+## 1.6 Configure Command Line Warning Banners
+hardening_sec01_06: true
+# Message of the day
+hardening_motd_msg: "He's dead, Dave, everybody is dead, everybody is dead, Dave."
+hardening_motd_path: /etc/motd
+hardening_motd_dynamic_erase: true
+hardening_motd_dynamic_path: /etc/update-motd.d
+# Login warning
+hardening_issue_msg: "Authorized users only. All activity may be monitored and reported."
+hardening_local_issue_path: /etc/issue
+hardening_remote_issue_path: /etc/issue.net
+
+## 1.7 Configure GNOME Display Manager
+hardening_sec01_07: true
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section: 02 Services
+#
+# Select which subsection should be applied
+# and also included settings.
+
+## 2.1 Configure Server Services
+hardening_sec02_01: true
+
+## 2.2 Configure Client Services
+hardening_sec02_02: true
+
+## 2.3 Configure Time Synchronization
+hardening_sec02_03: true
+# Timezone (get your value from 'timedatectl list-timezones')
+hardening_time_timezone: Europe/Prague
+# Choose which daemon will be used for time synchronization
+# Warning: If you will choose chrony and forgot deny timesyncd, then timesyncd has got priority
+hardening_time_timesyncd_daemon: true
+hardening_time_timesyncd_path: /etc/systemd/timesyncd.conf.d/60-timesyncd.conf
+hardening_time_chrony_daemon: false
+hardening_time_chrony_path: /etc/chrony/sources.d/60-sources.sources
+# Definition of primary NTP servers
+hardening_time_primary_ntps:
+  - 0.cz.pool.ntp.org
+  - 1.cz.pool.ntp.org
+  - 2.cz.pool.ntp.org
+  - 3.cz.pool.ntp.org
+# Definition of fallback NTP servers
+hardening_time_fallback_ntps:
+  - time-a-g.nist.gov
+  - time-b-g.nist.gov
+  - time-c-g.nist.gov
+  - time-d-g.nist.gov
+  - time-e-g.nist.gov
+
+## 2.4 Job Schedulers
+hardening_sec02_04: true
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section: 03 Network
+#
+# Select which subsection should be applied
+# and also included settings.
+
+## 3.1 Configure Network Devices
+hardening_sec03_01: true
+
+## 3.2 Configure Network Kernel Modules
+hardening_sec03_02: true
+
+## 3.3 Configure Network Kernel Parameters
+hardening_sec03_03: true
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section: 04 Host Based Firewall
+#
+# Select which subsection should be applied
+# and also included settings.
+
+## 4.2 Configure UFW
+hardening_sec04_02: true
+
+## 4.3 Configure nftables
+hardening_sec04_03: true
+
+## 4.4 Configure iptables
+hardening_sec04_04: true
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section: 05 Access Control
+#
+# Select which subsection should be applied
+# and also included settings.
+
+## 5.1 Configure SSH Server
+hardening_sec05_01: true
+
+## 5.2 Configure privilege escalation
+hardening_sec05_02: true
+
+## 5.3 Pluggable Authentication Modules
+hardening_sec05_03: true
+
+## 5.4 User Accounts and Environment
+hardening_sec05_04: true
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section: 06 Logging and Auditing
+#
+# Select which subsection should be applied
+# and also included settings.
+
+## 6.1 System Logging
+hardening_sec06_01: true
+
+## 6.2 System Auditing
+hardening_sec06_02: true
+
+## 6.3 Configure Integrity Checking
+hardening_sec06_03: true
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section: 07 System Maintenance
+#
+# Select which subsection should be applied
+# and also included settings.
+
+## 7.1 System File Permissions
+hardening_sec07_01: true
+
+## 7.2 Local User and Group Settings
+hardening_sec07_02: true
+
+## --------------------------------------------------------
+
+## --------------------------------------------------------
+## Section:
+#
+
+## --------------------------------------------------------
+...

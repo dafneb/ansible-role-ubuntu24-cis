@@ -1,0 +1,40 @@
+---
+- name: "sec06 | sec06-main | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec06 | sec06-main | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec06 | sec06-main | Import subsection 01 - System Logging"
+  ansible.builtin.import_tasks:
+    file: sec06/sec06-01.yml
+  when: hardening_sec06_01
+  tags:
+    - always
+
+- name: "sec06 | sec06-main | Import subsection 02 - System Auditing"
+  ansible.builtin.import_tasks:
+    file: sec06/sec06-02.yml
+  when: hardening_sec06_02
+  tags:
+    - always
+
+- name: "sec06 | sec06-main | Import subsection 03 - Configure Integrity Checking"
+  ansible.builtin.import_tasks:
+    file: sec06/sec06-03.yml
+  when: hardening_sec06_03
+  tags:
+    - always
+
+...

@@ -1,2 +1,69 @@
 ---
-# tasks file for cis-ubuntu24
+# tasks file for ubuntu24-cis
+- name: Check OS family
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: Check OS version and family
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: Import Section 01 - Initial Setup
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-main.yml
+  when: hardening_sec01
+  tags:
+    - always
+
+- name: Import Section 02 - Services
+  ansible.builtin.import_tasks:
+    file: sec02/sec02-main.yml
+  when: hardening_sec02
+  tags:
+    - always
+
+- name: Import Section 03 - Network
+  ansible.builtin.import_tasks:
+    file: sec03/sec03-main.yml
+  when: hardening_sec03
+  tags:
+    - always
+
+- name: Import Section 04 - Host Based Firewall
+  ansible.builtin.import_tasks:
+    file: sec04/sec04-main.yml
+  when: hardening_sec04
+  tags:
+    - always
+
+- name: Import Section 05 - Access Control
+  ansible.builtin.import_tasks:
+    file: sec05/sec05-main.yml
+  when: hardening_sec05
+  tags:
+    - always
+
+- name: Import Section 06 - Logging and auditing
+  ansible.builtin.import_tasks:
+    file: sec06/sec06-main.yml
+  when: hardening_sec06
+  tags:
+    - always
+
+- name: Import Section 07 - System Maintenance
+  ansible.builtin.import_tasks:
+    file: sec07/sec07-main.yml
+  when: hardening_sec07
+  tags:
+    - always
+
+...

@@ -1,0 +1,68 @@
+---
+- name: "sec01 | sec01-main | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Import subsection 01 - Filesystem"
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-01.yml
+  when: hardening_sec01_01
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Import subsection 02 - Package Management"
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-02.yml
+  when: hardening_sec01_02
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Import subsection 03 - Mandatory Access Control (MAC)"
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-03.yml
+  when: hardening_sec01_03
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Import subsection 04 - Configure Bootloader"
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-04.yml
+  when: hardening_sec01_04
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Import subsection 05 - Configure Additional Process Hardening"
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-05.yml
+  when: hardening_sec01_05
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Import subsection 06 - Configure Command Line Warning Banners"
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-06.yml
+  when: hardening_sec01_06
+  tags:
+    - always
+
+- name: "sec01 | sec01-main | Import subsection 07 - Configure GNOME Display Manager"
+  ansible.builtin.import_tasks:
+    file: sec01/sec01-07.yml
+  when: hardening_sec01_07
+  tags:
+    - always
+
+...

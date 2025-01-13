@@ -9,7 +9,7 @@ This role also implements settings and tasks from those roles:
 * dafneb.ubuntu24-aide
 * dafneb.ubuntu24-apparmor
 
-Actually following: CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0 - 08-26-2024
+Actual version is following: CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0 - 08-26-2024
 
 Requirements
 ------------
@@ -26,7 +26,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - { role: dafneb.rolename }
+         - { role: dafneb.ubuntu24-cis }
 
 License
 -------

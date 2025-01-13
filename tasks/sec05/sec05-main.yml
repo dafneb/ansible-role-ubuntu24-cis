@@ -1,0 +1,47 @@
+---
+- name: "sec05 | sec05-main | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec05 | sec05-main | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec05 | sec05-main | Import subsection 01 - Configure SSH Server"
+  ansible.builtin.import_tasks:
+    file: sec05/sec05-01.yml
+  when: hardening_sec05_01
+  tags:
+    - always
+
+- name: "sec05 | sec05-main | Import subsection 02 - Configure privilege escalation"
+  ansible.builtin.import_tasks:
+    file: sec05/sec05-02.yml
+  when: hardening_sec05_02
+  tags:
+    - always
+
+- name: "sec05 | sec05-main | Import subsection 03 - Pluggable Authentication Modules"
+  ansible.builtin.import_tasks:
+    file: sec05/sec05-03.yml
+  when: hardening_sec05_03
+  tags:
+    - always
+
+- name: "sec05 | sec05-main | Import subsection 04 - User Accounts and Environment"
+  ansible.builtin.import_tasks:
+    file: sec05/sec05-04.yml
+  when: hardening_sec05_04
+  tags:
+    - always
+
+...

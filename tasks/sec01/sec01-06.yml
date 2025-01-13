@@ -1,0 +1,67 @@
+---
+- name: "sec01 | sec01-06 | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec01 | sec01-06 | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec01 | sec01-06 | Create message of the day ({{ hardening_motd_path }})"
+  ansible.builtin.template:
+    src: sec01/sec01-06/motd.j2
+    dest: "{{ hardening_motd_path }}"
+    mode: '0644'
+    owner: root
+    group: root
+  tags:
+    - always
+
+- name: "sec01 | sec01-06 | Delete dynamic message of the day ({{ hardening_motd_dynamic_path }})"
+  ansible.builtin.file:
+    path: "{{ hardening_motd_dynamic_path }}/"
+    state: absent
+  when: hardening_motd_dynamic_erase
+  tags:
+    - always
+
+- name: "sec01 | sec01-06 | Create a directory if it does not exist ({{ hardening_motd_dynamic_path }})"
+  ansible.builtin.file:
+    path: "{{ hardening_motd_dynamic_path }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  tags:
+    - always
+
+- name: "sec01 | sec01-06 | Create local login banner ({{ hardening_local_issue_path }})"
+  ansible.builtin.template:
+    src: sec01/sec01-06/issue.j2
+    dest: "{{ hardening_local_issue_path }}"
+    mode: '0644'
+    owner: root
+    group: root
+  tags:
+    - always
+
+- name: "sec01 | sec01-06 | Create remote login banner ({{ hardening_remote_issue_path }})"
+  ansible.builtin.template:
+    src: sec01/sec01-06/issue.j2
+    dest: "{{ hardening_remote_issue_path }}"
+    mode: '0644'
+    owner: root
+    group: root
+  tags:
+    - always
+
+...

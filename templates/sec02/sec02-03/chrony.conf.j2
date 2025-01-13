@@ -1,0 +1,6 @@
+{% for server in hardening_time_primary_ntps -%}
+server {{ server }} iburst
+{% endfor %}
+{% for server in hardening_time_fallback_ntps -%}
+server {{ server }} iburst
+{% endfor %}
