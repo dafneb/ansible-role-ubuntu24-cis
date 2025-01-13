@@ -39,6 +39,11 @@ hardening_sec01_01: true
 ## 1.2 Package Management
 hardening_sec01_02: true
 
+# Settings for update and upgrade
+hardening_updates_cache_valid_time: 3600
+hardening_upgrade_installed_packages: true
+hardening_updates_autoremove_purge: true
+
 ## 1.3 Mandatory Access Control (MAC)
 hardening_sec01_03: true
 

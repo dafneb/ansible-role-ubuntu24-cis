@@ -16,4 +16,33 @@
   tags:
     - always
 
+- name: "sec01 | sec01-02 | Run update_cache"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ updates_cache_valid_time }}"
+  tags:
+    - always
+
+- name: "sec01 | sec01-02 | Update all packages to their latest version"
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    only_upgrade: true
+  when: hardening_upgrade_installed_packages
+  tags:
+    - always
+
+- name: "sec01 | sec01-02 | Remove useless packages from the cache"
+  ansible.builtin.apt:
+    autoclean: true
+  tags:
+    - always
+
+- name: "sec01 | sec01-02 | Remove dependencies that are no longer required"
+  ansible.builtin.apt:
+    autoremove: true
+    purge: "{{ hardening_updates_autoremove_purge }}"
+  tags:
+    - always
+
 ...
