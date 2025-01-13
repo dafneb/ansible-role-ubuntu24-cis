@@ -36,4 +36,13 @@
   tags:
     - always
 
+- name: Update AIDE database
+  ansible.builtin.copy:
+    src: /var/lib/aide/aide.db.new
+    dest: /var/lib/aide/aide.db
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: true
+
 ...

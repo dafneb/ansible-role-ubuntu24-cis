@@ -138,10 +138,10 @@ hardening_sec03_03: true
 hardening_sec04_02: true
 
 ## 4.3 Configure nftables
-hardening_sec04_03: true
+hardening_sec04_03: false
 
 ## 4.4 Configure iptables
-hardening_sec04_04: true
+hardening_sec04_04: false
 
 ## --------------------------------------------------------
 
