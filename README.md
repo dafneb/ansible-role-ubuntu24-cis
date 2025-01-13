@@ -26,7 +26,12 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - { role: dafneb.ubuntu24-cis }
+         - role: dafneb.ubuntu24-cis
+           vars:
+             hardening_ansible_console_ip:
+               - 127.0.0.1
+             hardening_admin_device_ip:  
+               - 127.0.0.1
 
 License
 -------
