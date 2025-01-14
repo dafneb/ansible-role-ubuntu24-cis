@@ -32,8 +32,8 @@
     name: "{{ item }}"
     state: absent
     purge: true
-    autoremove: no
-    autoclean: no
+    autoremove: true
+    autoclean: true
   loop: "{{ hardening_purge_package }}"
   ignore_errors: true
   tags:

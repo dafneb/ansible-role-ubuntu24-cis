@@ -16,4 +16,16 @@
   tags:
     - always
 
+- name: "sec02 | sec02-02 | Purge package"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+    purge: true
+    autoremove: true
+    autoclean: true
+  loop: "{{ hardening_purge_client_package }}"
+  ignore_errors: true
+  tags:
+    - always
+
 ...

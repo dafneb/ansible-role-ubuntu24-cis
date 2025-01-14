@@ -115,6 +115,16 @@ hardening_mta_local_only: true
 
 ## 2.2 Configure Client Services
 hardening_sec02_02: true
+# Define which packages should be purged from system
+hardening_purge_client_package:
+  - nis
+  - rsh-client
+  - talk
+  - telnet
+  - inetutils-telnet
+  - ldap-utils
+  - ftp
+  - tnftp
 
 ## 2.3 Configure Time Synchronization
 hardening_sec02_03: true
