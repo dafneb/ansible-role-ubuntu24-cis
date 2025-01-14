@@ -47,6 +47,8 @@ hardening_updates_autoremove_purge: true
 ## 1.3 Mandatory Access Control (MAC)
 hardening_sec01_03: true
 
+# AppArmor required packages
+
 ## 1.4 Configure Bootloader
 hardening_sec01_04: true
 
@@ -78,6 +80,38 @@ hardening_sec01_07: true
 
 ## 2.1 Configure Server Services
 hardening_sec02_01: true
+# Define which services should be stopped and masked
+hardening_stop_service:
+  - autofs.service
+  - avahi-daemon.socket
+  - avahi-daemon.service
+  - isc-dhcp-server.service
+  - isc-dhcp-server6.service
+  - named.service
+  - dnsmasq.service
+  - vsftpd.service
+  - slapd.service
+  - dovecot.socket
+  - dovecot.service
+  - nfs-server.service
+  - ypserv.service
+  - cups.socket
+  - cups.service
+  - rpcbind.socket
+  - rpcbind.service
+  - rsync.service
+  - smbd.service
+  - snmpd.service
+  - tftpd-hpa.service
+  - squid.service
+  - apache2.socket
+  - apache2.service
+  - nginx.service
+  - xinetd.service
+# Define which packages should be purged from system
+# Warning: This array is empty due to risk of unsuspected behavior
+hardening_purge_package: []
+hardening_mta_local_only: true
 
 ## 2.2 Configure Client Services
 hardening_sec02_02: true

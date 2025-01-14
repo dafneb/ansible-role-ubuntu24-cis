@@ -19,7 +19,7 @@
 - name: "sec01 | sec01-02 | Run update_cache"
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: "{{ updates_cache_valid_time }}"
+    cache_valid_time: "{{ hardening_updates_cache_valid_time }}"
   tags:
     - always
 

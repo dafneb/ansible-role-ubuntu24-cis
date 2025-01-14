@@ -45,4 +45,13 @@
     mode: '0644'
     remote_src: true
 
+- name: Restart postfix service
+  ansible.builtin.systemd_service:
+    name: postfix
+    state: restarted
+    enabled: true
+    masked: false
+  tags:
+    - always
+
 ...

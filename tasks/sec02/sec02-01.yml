@@ -16,4 +16,38 @@
   tags:
     - always
 
+- name: "sec02 | sec02-01 | Stop and mask service"
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+    masked: true
+  loop: "{{ hardening_stop_service }}"
+  ignore_errors: true
+  tags:
+    - always
+
+- name: "sec02 | sec02-01 | Purge package"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+    purge: true
+    autoremove: no
+    autoclean: no
+  loop: "{{ hardening_purge_package }}"
+  ignore_errors: true
+  tags:
+    - always
+
+- name: "sec02 | sec02-01 | Set MTA for local-only mode"
+  ansible.builtin.lineinfile:
+    path:  /etc/postfix/main.cf
+    regexp: '^inet_interfaces ='
+    line:  inet_interfaces = loopback-only
+  when: hardening_mta_local_only
+  notify:
+    - Restart postfix service
+  tags:
+    - always
+
 ...
