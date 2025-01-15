@@ -1,35 +1,35 @@
 ---
 # handlers file for ubuntu24-cis
-- name: Restart cron service
+- name: Restart cron.service
   ansible.builtin.systemd_service:
-    name: cron
+    name: cron.service
     state: restarted
     enabled: true
     masked: false
   tags:
     - always
 
-- name: Restart systemd-timesyncd service
+- name: Restart systemd-timesyncd.service
   ansible.builtin.systemd_service:
-    name: systemd-timesyncd
+    name: systemd-timesyncd.service
     state: restarted
     enabled: true
     masked: false
   tags:
     - always
 
-- name: Restart systemd-journald service
+- name: Restart systemd-journald.service
   ansible.builtin.systemd_service:
-    name: systemd-journald
+    name: systemd-journald.service
     state: restarted
     enabled: true
     masked: false
   tags:
     - always
 
-- name: Restart chronyd service
+- name: Restart chronyd.service
   ansible.builtin.systemd_service:
-    name: chronyd
+    name: chronyd.service
     state: restarted
     enabled: true
     masked: false
@@ -45,9 +45,9 @@
     mode: '0644'
     remote_src: true
 
-- name: Restart postfix service
+- name: Restart postfix.service
   ansible.builtin.systemd_service:
-    name: postfix
+    name: postfix.service
     state: restarted
     enabled: true
     masked: false

@@ -153,6 +153,31 @@ hardening_time_fallback_ntps:
 ## 2.4 Job Schedulers
 hardening_sec02_04: true
 
+# Cron settings - cron.allow
+# If hardening_cron_allow_list is true, then file cron.allow is created.
+# If hardening_cron_allow_list is false, then file cron.allow is removed.
+hardening_cron_allow_list: true
+hardening_cron_users_allow_list:
+  - root
+# Cron settings - cron.deny
+# If hardening_cron_deny_list is true, then file cron.deny is created.
+# If hardening_cron_deny_list is false, then file cron.deny is removed.
+hardening_cron_deny_list: false
+hardening_cron_users_deny_list: []
+
+# At settings - installation / purging of "at" package
+hardening_install_at: false
+# Cron settings - cron.allow
+# If hardening_at_allow_list is true, then file cron.allow is created.
+# If hardening_at_allow_list is false, then file cron.allow is removed.
+hardening_at_allow_list: false
+hardening_at_users_allow_list: []
+# Cron settings - cron.deny
+# If hardening_at_deny_list is true, then file cron.deny is created.
+# If hardening_at_deny_list is false, then file cron.deny is removed.
+hardening_at_deny_list: false
+hardening_at_users_deny_list: []
+
 ## --------------------------------------------------------
 
 ## --------------------------------------------------------

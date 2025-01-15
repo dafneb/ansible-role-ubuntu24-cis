@@ -16,4 +16,274 @@
   tags:
     - always
 
+- name: "sec02 | sec02-04 | Enable and activate cron.service"
+  ansible.builtin.systemd_service:
+    name: cron.service
+    state: started
+    enabled: true
+    masked: false
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Permissions on file /etc/crontab"
+  ansible.builtin.file:
+    path:  /etc/crontab
+    state: file
+    mode:  '0600'
+    owner:  root
+    group:  root
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Permissions on directory /etc/cron.hourly"
+  ansible.builtin.file:
+    path:  /etc/cron.hourly
+    state: directory
+    mode:  '0700'
+    owner:  root
+    group:  root
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Permissions on directory /etc/cron.daily"
+  ansible.builtin.file:
+    path:  /etc/cron.daily
+    state: directory
+    mode:  '0700'
+    owner:  root
+    group:  root
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Permissions on directory /etc/cron.weekly"
+  ansible.builtin.file:
+    path:  /etc/cron.weekly
+    state: directory
+    mode:  '0700'
+    owner:  root
+    group:  root
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Permissions on directory /etc/cron.monthly"
+  ansible.builtin.file:
+    path:  /etc/cron.monthly
+    state: directory
+    mode:  '0700'
+    owner:  root
+    group:  root
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Permissions on directory /etc/cron.yearly"
+  ansible.builtin.file:
+    path:  /etc/cron.yearly
+    state: directory
+    mode:  '0700'
+    owner:  root
+    group:  root
+  tags:
+    - always
+  
+- name: "sec02 | sec02-04 | Permissions on directory /etc/cron.d"
+  ansible.builtin.file:
+    path:  /etc/cron.d
+    state: directory
+    mode:  '0700'
+    owner:  root
+    group:  root
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Check if group crontab exists"
+  ansible.builtin.command: grep -Pq -- '^\h*crontab\:' /etc/group
+  register: crontab_group_res
+  ignore_errors: true
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/cron.allow (crontab)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/cron.allow.j2
+    dest: /etc/cron.allow
+    owner: root
+    group: crontab
+    mode: '0640'
+  when:
+    - hardening_cron_allow_list
+    - crontab_group_res.rc == 0
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/cron.allow (root)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/cron.allow.j2
+    dest: /etc/cron.allow
+    owner: root
+    group: root
+    mode: '0640'
+  when:
+    - hardening_cron_allow_list
+    - crontab_group_res.rc == 1
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Remove file /etc/cron.allow"
+  ansible.builtin.file:
+    path: /etc/cron.allow
+    state: absent
+  when:
+    - not hardening_cron_allow_list
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/cron.deny (crontab)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/cron.deny.j2
+    dest: /etc/cron.deny
+    owner: root
+    group: crontab
+    mode: '0640'
+  when:
+    - hardening_cron_deny_list
+    - crontab_group_res.rc == 0
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/cron.deny (root)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/cron.deny.j2
+    dest: /etc/cron.deny
+    owner: root
+    group: root
+    mode: '0640'
+  when:
+    - hardening_cron_deny_list
+    - crontab_group_res.rc == 1
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Remove file /etc/cron.deny"
+  ansible.builtin.file:
+    path: /etc/cron.deny
+    state: absent
+  when:
+    - not hardening_cron_deny_list
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Check if group daemon exists"
+  ansible.builtin.command: grep -Pq -- '^\h*daemon\:' /etc/group
+  register: daemon_group_res
+  ignore_errors: true
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Run update_cache"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ hardening_updates_cache_valid_time }}"
+  when:
+    - not hardening_sec01_02
+    - hardening_install_at
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Install at package"
+  ansible.builtin.apt:
+    name: "at"
+    state: present
+  when:
+    - hardening_install_at
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Purge at package"
+  ansible.builtin.apt:
+    name: "at"
+    state: absent
+    purge: true
+    autoremove: true
+    autoclean: true
+  when:
+    - not hardening_install_at
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/at.allow (daemon)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/at.allow.j2
+    dest: /etc/at.allow
+    owner: root
+    group: daemon
+    mode: '0640'
+  when:
+    - hardening_install_at
+    - hardening_at_allow_list
+    - daemon_group_res.rc == 0
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/at.allow (root)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/at.allow.j2
+    dest: /etc/at.allow
+    owner: root
+    group: root
+    mode: '0640'
+  when:
+    - hardening_install_at
+    - hardening_at_allow_list
+    - daemon_group_res.rc == 1
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Remove file /etc/at.allow"
+  ansible.builtin.file:
+    path: /etc/at.allow
+    state: absent
+  when:
+    - (not hardening_at_allow_list) or
+      (not hardening_install_at)
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/at.deny (daemon)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/at.deny.j2
+    dest: /etc/at.deny
+    owner: root
+    group: daemon
+    mode: '0640'
+  when:
+    - hardening_install_at
+    - hardening_at_deny_list
+    - daemon_group_res.rc == 0
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Create file /etc/cron.deny (root)"
+  ansible.builtin.template:
+    src: sec02/sec02-04/at.deny.j2
+    dest: /etc/at.deny
+    owner: root
+    group: root
+    mode: '0640'
+  when:
+    - hardening_install_at
+    - hardening_at_deny_list
+    - daemon_group_res.rc == 1
+  tags:
+    - always
+
+- name: "sec02 | sec02-04 | Remove file /etc/at.deny"
+  ansible.builtin.file:
+    path: /etc/at.deny
+    state: absent
+  when:
+    - (not hardening_at_deny_list) or
+      (not hardening_install_at)
+  tags:
+    - always
+
 ...
