@@ -16,4 +16,82 @@
   tags:
     - always
 
+- name: "sec01 | sec01-03 | Run update_cache"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ hardening_updates_cache_valid_time }}"
+  when: not hardening_sec01_02
+  tags:
+    - always
+
+- name: "sec01 | sec01-03 | Install packages"
+  ansible.builtin.apt:
+    pkg: "{{ hardening_apparmor_packages }}"
+  tags:
+    - always
+
+- name: "sec01 | sec01-03 | Adjust GRUB file - apparmor=1 (replace)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX=\"(.*)apparmor=\d(.*)\"$'
+    line: 'GRUB_CMDLINE_LINUX="\1apparmor=1\2"'
+    backrefs: true
+  register: grub_apparmor_replaced
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec01 | sec01-03 | Adjust GRUB file - apparmor=1 (create)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=\".*)\"$'
+    line: '\1 apparmor=1"'
+    backrefs: true
+  when:
+    - grub_apparmor_replaced is not changed
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec01 | sec01-03 | Adjust GRUB file - security=apparmor (replace)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX=\"(.*)security=\w*(.*)\"$'
+    line: 'GRUB_CMDLINE_LINUX="\1security=apparmor\2"'
+    backrefs: true
+  register: grub_security_replaced
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec01 | sec01-03 | Adjust GRUB file - security=apparmor (create)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=\".*)\"$'
+    line: '\1 security=apparmor"'
+    backrefs: true
+  when:
+    - grub_security_replaced is not changed
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec01 | sec01-03 | Set all profiles to complain mode"
+  ansible.builtin.command: aa-complain /ect/apparmor.d/*
+  changed_when: true
+  failed_when: false
+  when:
+    - hardening_apparmor_complaint_mode
+  tags:
+    - always
+
+- name: "sec01 | sec01-03 | Set all profiles to enforce mode"
+  ansible.builtin.command: aa-enforce /ect/apparmor.d/*
+  changed_when: true
+  failed_when: false
+  when:
+    - not hardening_apparmor_complaint_mode
+  tags:
+    - always
+
 ...

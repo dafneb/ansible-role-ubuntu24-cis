@@ -59,7 +59,8 @@
 - name: Apply network settings
   ansible.builtin.command: sysctl -p
   register: apply_network
-  changed_when: apply_network.rc != 0
+  changed_when: true
+  failed_when: false
   tags:
     - always
 
