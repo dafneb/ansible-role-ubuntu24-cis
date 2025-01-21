@@ -23,7 +23,7 @@
     enabled: false
     masked: true
   loop: "{{ hardening_stop_service }}"
-  ignore_errors: true
+  failed_when: false
   tags:
     - always
 
@@ -35,15 +35,15 @@
     autoremove: true
     autoclean: true
   loop: "{{ hardening_purge_package }}"
-  ignore_errors: true
+  failed_when: false
   tags:
     - always
 
 - name: "sec02 | sec02-01 | Set MTA for local-only mode"
   ansible.builtin.lineinfile:
-    path:  /etc/postfix/main.cf
+    path: /etc/postfix/main.cf
     regexp: '^inet_interfaces ='
-    line:  inet_interfaces = loopback-only
+    line: inet_interfaces = loopback-only
   when: hardening_mta_local_only
   notify:
     - Restart postfix service

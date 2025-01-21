@@ -44,6 +44,8 @@
     group: root
     mode: '0644'
     remote_src: true
+  tags:
+    - always
 
 - name: Restart postfix.service
   ansible.builtin.systemd_service:
@@ -51,6 +53,29 @@
     state: restarted
     enabled: true
     masked: false
+  tags:
+    - always
+
+- name: Apply network settings
+  ansible.builtin.command: sysctl -p
+  register: apply_network
+  changed_when: apply_network.rc != 0
+  tags:
+    - always
+
+- name: Restart procps
+  ansible.builtin.systemd_service:
+    name: procps
+    state: restarted
+    enabled: true
+    masked: false
+  tags:
+    - always
+
+- name: Grub update
+  ansible.builtin.command: update-grub
+  changed_when: true
+  failed_when: false
   tags:
     - always
 

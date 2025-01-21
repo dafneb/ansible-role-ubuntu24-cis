@@ -16,4 +16,106 @@
   tags:
     - always
 
+- name: "sec03 | sec03-01 | Disable IPv6 (net.ipv6.conf.all.disable_ipv6)"
+  ansible.builtin.lineinfile:
+    path: "{{ hardening_disable_ipv6_conf_path }}"
+    regexp: '^net\.ipv6\.conf\.all\.disable_ipv6\s'
+    line: net.ipv6.conf.all.disable_ipv6 = 1
+    mode: '0644'
+    owner: root
+    group: root
+    create: true
+  when:
+    - hardening_disable_ipv6
+  notify:
+    - Apply network settings
+    - Restart procps
+  tags:
+    - always
+
+- name: "sec03 | sec03-01 | Disable IPv6 (net.ipv6.conf.default.disable_ipv6)"
+  ansible.builtin.lineinfile:
+    path: "{{ hardening_disable_ipv6_conf_path }}"
+    regexp: '^net\.ipv6\.conf\.default\.disable_ipv6\s'
+    line: net.ipv6.conf.default.disable_ipv6 = 1
+    mode: '0644'
+    owner: root
+    group: root
+    create: true
+  when:
+    - hardening_disable_ipv6
+  notify:
+    - Apply network settings
+    - Restart procps
+  tags:
+    - always
+
+- name: "sec03 | sec03-01 | Disable IPv6 (net.ipv6.conf.lo.disable_ipv6)"
+  ansible.builtin.lineinfile:
+    path: "{{ hardening_disable_ipv6_conf_path }}"
+    regexp: '^net\.ipv6\.conf\.lo\.disable_ipv6\s'
+    line: net.ipv6.conf.lo.disable_ipv6 = 1
+    mode: '0644'
+    owner: root
+    group: root
+    create: true
+  when:
+    - hardening_disable_ipv6
+  notify:
+    - Apply network settings
+    - Restart procps
+  tags:
+    - always
+
+- name: "sec03 | sec03-01 | Enable IPv6 (net.ipv6.conf.all.disable_ipv6)"
+  ansible.builtin.lineinfile:
+    path: "{{ hardening_disable_ipv6_conf_path }}"
+    regexp: '^net\.ipv6\.conf\.all\.disable_ipv6\s'
+    line: net.ipv6.conf.all.disable_ipv6 = 0
+    mode: '0644'
+    owner: root
+    group: root
+    create: true
+  when:
+    - not hardening_disable_ipv6
+  notify:
+    - Apply network settings
+    - Restart procps
+  tags:
+    - always
+
+- name: "sec03 | sec03-01 | Enable IPv6 (net.ipv6.conf.default.disable_ipv6)"
+  ansible.builtin.lineinfile:
+    path: "{{ hardening_disable_ipv6_conf_path }}"
+    regexp: '^net\.ipv6\.conf\.default\.disable_ipv6\s'
+    line: net.ipv6.conf.default.disable_ipv6 = 0
+    mode: '0644'
+    owner: root
+    group: root
+    create: true
+  when:
+    - not hardening_disable_ipv6
+  notify:
+    - Apply network settings
+    - Restart procps
+  tags:
+    - always
+
+- name: "sec03 | sec03-01 | Enable IPv6 (net.ipv6.conf.lo.disable_ipv6)"
+  ansible.builtin.lineinfile:
+    path: "{{ hardening_disable_ipv6_conf_path }}"
+    regexp: '^net\.ipv6\.conf\.lo\.disable_ipv6\s'
+    line: net.ipv6.conf.lo.disable_ipv6 = 0
+    mode: '0644'
+    owner: root
+    group: root
+    create: true
+  when:
+    - not hardening_disable_ipv6
+  notify:
+    - Apply network settings
+    - Restart procps
+  tags:
+    - always
+
 ...

@@ -27,78 +27,79 @@
 
 - name: "sec02 | sec02-04 | Permissions on file /etc/crontab"
   ansible.builtin.file:
-    path:  /etc/crontab
+    path: /etc/crontab
     state: file
-    mode:  '0600'
-    owner:  root
-    group:  root
+    mode: '0600'
+    owner: root
+    group: root
   tags:
     - always
 
 - name: "sec02 | sec02-04 | Permissions on directory /etc/cron.hourly"
   ansible.builtin.file:
-    path:  /etc/cron.hourly
+    path: /etc/cron.hourly
     state: directory
-    mode:  '0700'
-    owner:  root
-    group:  root
+    mode: '0700'
+    owner: root
+    group: root
   tags:
     - always
 
 - name: "sec02 | sec02-04 | Permissions on directory /etc/cron.daily"
   ansible.builtin.file:
-    path:  /etc/cron.daily
+    path: /etc/cron.daily
     state: directory
-    mode:  '0700'
-    owner:  root
-    group:  root
+    mode: '0700'
+    owner: root
+    group: root
   tags:
     - always
 
 - name: "sec02 | sec02-04 | Permissions on directory /etc/cron.weekly"
   ansible.builtin.file:
-    path:  /etc/cron.weekly
+    path: /etc/cron.weekly
     state: directory
-    mode:  '0700'
-    owner:  root
-    group:  root
+    mode: '0700'
+    owner: root
+    group: root
   tags:
     - always
 
 - name: "sec02 | sec02-04 | Permissions on directory /etc/cron.monthly"
   ansible.builtin.file:
-    path:  /etc/cron.monthly
+    path: /etc/cron.monthly
     state: directory
-    mode:  '0700'
-    owner:  root
-    group:  root
+    mode: '0700'
+    owner: root
+    group: root
   tags:
     - always
 
 - name: "sec02 | sec02-04 | Permissions on directory /etc/cron.yearly"
   ansible.builtin.file:
-    path:  /etc/cron.yearly
+    path: /etc/cron.yearly
     state: directory
-    mode:  '0700'
-    owner:  root
-    group:  root
+    mode: '0700'
+    owner: root
+    group: root
   tags:
     - always
-  
+
 - name: "sec02 | sec02-04 | Permissions on directory /etc/cron.d"
   ansible.builtin.file:
-    path:  /etc/cron.d
+    path: /etc/cron.d
     state: directory
-    mode:  '0700'
-    owner:  root
-    group:  root
+    mode: '0700'
+    owner: root
+    group: root
   tags:
     - always
 
 - name: "sec02 | sec02-04 | Check if group crontab exists"
   ansible.builtin.command: grep -Pq -- '^\h*crontab\:' /etc/group
   register: crontab_group_res
-  ignore_errors: true
+  failed_when: false
+  changed_when: false
   tags:
     - always
 
@@ -175,7 +176,8 @@
 - name: "sec02 | sec02-04 | Check if group daemon exists"
   ansible.builtin.command: grep -Pq -- '^\h*daemon\:' /etc/group
   register: daemon_group_res
-  ignore_errors: true
+  failed_when: false
+  changed_when: false
   tags:
     - always
 

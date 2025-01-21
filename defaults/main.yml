@@ -48,6 +48,14 @@ hardening_updates_autoremove_purge: true
 hardening_sec01_03: true
 
 # AppArmor required packages
+hardening_apparmor_packages:
+  - apparmor
+  - apparmor-utils
+
+# Select mode for AppArmor
+# true: complaint mode
+# false: enforce mode
+hardening_apparmor_complaint_mode: true
 
 ## 1.4 Configure Bootloader
 hardening_sec01_04: true
@@ -188,6 +196,16 @@ hardening_at_users_deny_list: []
 
 ## 3.1 Configure Network Devices
 hardening_sec03_01: true
+
+# Disable IPv6
+hardening_disable_ipv6: true
+hardening_disable_ipv6_conf_path: /etc/sysctl.d/10-ipv6-disabling.conf
+
+# Disable wireless connection
+hardening_disable_wifi: false
+
+# Disable bluetooth connection
+hardening_disable_bluetooth: false
 
 ## 3.2 Configure Network Kernel Modules
 hardening_sec03_02: true

@@ -24,7 +24,7 @@
     autoremove: true
     autoclean: true
   loop: "{{ hardening_purge_client_package }}"
-  ignore_errors: true
+  failed_when: false
   tags:
     - always
 
