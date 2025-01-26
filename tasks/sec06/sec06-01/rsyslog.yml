@@ -1,0 +1,124 @@
+---
+- name: "sec06-01 | rsyslog | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Run update_cache"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ hardening_updates_cache_valid_time }}"
+  when: not hardening_sec01_02
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Install rsyslog packages"
+  ansible.builtin.apt:
+    pkg: "{{ hardening_rsyslog_packages }}"
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Implement rsyslog settings"
+  ansible.builtin.template:
+    src: sec06/sec06-01/rsyslog.conf.j2
+    dest: /etc/rsyslog.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify:
+    - Restart rsyslog.service
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Implement rsyslog default settings"
+  ansible.builtin.template:
+    src: sec06/sec06-01/50-rsyslog-default.conf.j2
+    dest: /etc/rsyslog.d/50-default.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify:
+    - Restart rsyslog.service
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Implement rsyslog settings for sending logs"
+  ansible.builtin.template:
+    src: sec06/sec06-01/60-rsyslog-upload.conf.j2
+    dest: /etc/rsyslog.d/60-client.conf
+    mode: '0644'
+    owner: root
+    group: root
+  when:
+    - hardening_rsyslog_upload
+  notify:
+    - Restart rsyslog.service
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Implement rsyslog additional settings"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/rsyslog.d/{{ item | basename }}"
+    mode: '0644'
+    owner: root
+    group: root
+  loop: "{{ hardening_rsyslog_additional_settings }}"
+  notify:
+    - Restart rsyslog.service
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Implement logrotate settings for rsyslog"
+  ansible.builtin.template:
+    src: sec06/sec06-01/logrotate-rsyslog.j2
+    dest: /etc/logrotate.d/rsyslog
+    mode: '0644'
+    owner: root
+    group: root
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Masking systemd-journal-upload.service"
+  ansible.builtin.systemd_service:
+    name: systemd-journal-upload.service
+    state: stopped
+    enabled: false
+    masked: true
+  failed_when: false
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Masking systemd-journal-remote.service"
+  ansible.builtin.systemd_service:
+    name: systemd-journal-remote.service
+    state: stopped
+    enabled: false
+    masked: true
+  failed_when: false
+  tags:
+    - always
+
+- name: "sec06-01 | rsyslog | Masking systemd-journal-remote.socket"
+  ansible.builtin.systemd_service:
+    name: systemd-journal-remote.socket
+    state: stopped
+    enabled: false
+    masked: true
+  failed_when: false
+  tags:
+    - always
+
+...

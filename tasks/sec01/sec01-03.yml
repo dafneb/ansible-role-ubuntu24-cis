@@ -24,7 +24,7 @@
   tags:
     - always
 
-- name: "sec01 | sec01-03 | Install packages"
+- name: "sec01 | sec01-03 | Install AppArmor packages"
   ansible.builtin.apt:
     pkg: "{{ hardening_apparmor_packages }}"
   tags:

@@ -1,0 +1,21 @@
+[Journal]
+{% if not hardening_sysjournald_systemmaxuse is none -%}
+SystemMaxUse={{ hardening_sysjournald_systemmaxuse }}
+{% endif %}
+{% if not hardening_sysjournald_systemkeepfree is none -%}
+SystemKeepFree={{ hardening_sysjournald_systemkeepfree }}
+{% endif %}
+#SystemMaxFileSize=
+#SystemMaxFiles=100
+{% if not hardening_sysjournald_runtimemaxuse is none -%}
+RuntimeMaxUse={{ hardening_sysjournald_runtimemaxuse }}
+{% endif %}
+{% if not hardening_sysjournald_runtimekeepfree is none -%}
+RuntimeKeepFree={{ hardening_sysjournald_runtimekeepfree }}
+{% endif %}
+#RuntimeMaxFileSize=
+#RuntimeMaxFiles=100
+#MaxRetentionSec=
+{% if not hardening_sysjournald_maxfilesec is none -%}
+MaxFileSec={{ hardening_sysjournald_maxfilesec }}
+{% endif %}

@@ -1,0 +1,8 @@
+*.* action(type="omfwd"
+          queue.filename="fwdRule_{{ hardening_rsyslog_target }}"
+          queue.maxdiskspace="{{ hardening_rsyslog_maxdiskspace }}"
+          queue.saveonshutdown="{{ hardening_rsyslog_saveonshutdown }}"
+          queue.size="10000"
+          queue.type="LinkedList"
+          action.resumeRetryCount="{{ hardening_rsyslog_resumeretry }}"
+          Target="{{ hardening_rsyslog_target }}" Port="{{ hardening_rsyslog_port }}" Protocol="{{ hardening_rsyslog_protocol }}")

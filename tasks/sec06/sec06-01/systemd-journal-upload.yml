@@ -1,0 +1,62 @@
+---
+- name: "sec06-01 | systemd-journal-upload | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec06-01 | systemd-journal-upload | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec06-01 | systemd-journal-upload | Run update_cache"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ hardening_updates_cache_valid_time }}"
+  when: not hardening_sec01_02
+  tags:
+    - always
+
+- name: "sec06-01 | systemd-journal-upload | Install systemd-journal-remote packages"
+  ansible.builtin.apt:
+    pkg: "{{ hardening_journal_upload_packages }}"
+  tags:
+    - always
+
+- name: "sec06-01 | systemd-journal-upload | Configure systemd-journal-remote"
+  ansible.builtin.template:
+    src: sec06/sec06-01/60-journal-upload.conf.j2
+    dest: /etc/systemd/journal-upload.conf.d/60-client.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Reload systemd-journal-upload.service
+  tags:
+    - always
+
+- name: "sec06-01 | systemd-journal-upload | Masking systemd-journal-remote.service"
+  ansible.builtin.systemd_service:
+    name: systemd-journal-remote.service
+    state: stopped
+    enabled: false
+    masked: true
+  tags:
+    - always
+
+- name: "sec06-01 | systemd-journal-upload | Masking systemd-journal-remote.socket"
+  ansible.builtin.systemd_service:
+    name: systemd-journal-remote.socket
+    state: stopped
+    enabled: false
+    masked: true
+  tags:
+    - always
+
+...

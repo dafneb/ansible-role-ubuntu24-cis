@@ -1,0 +1,16 @@
+[Upload]
+{% if not hardening_journal_upload_url is none -%}
+URL={{ hardening_journal_upload_url }}
+{% endif %}
+{% if not hardening_journal_upload_serverkey is none -%}
+ServerKeyFile={{ hardening_journal_upload_serverkey }}
+{% endif %}
+{% if not hardening_journal_upload_servercert is none -%}
+ServerCertificateFile={{ hardening_journal_upload_servercert }}
+{% endif %}
+{% if not hardening_journal_upload_trustedcert is none -%}
+TrustedCertificateFile={{ hardening_journal_upload_trustedcert }}
+{% endif %}
+{% if not hardening_journal_upload_timeout is none -%}
+NetworkTimeoutSec={{ hardening_journal_upload_timeout }}
+{% endif %}

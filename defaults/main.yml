@@ -261,6 +261,45 @@ hardening_sec05_04: true
 ## 6.1 System Logging
 hardening_sec06_01: true
 
+# Settings for systemd-journald - rotation
+hardening_sysjournald_systemmaxuse: "1G"
+hardening_sysjournald_systemkeepfree: "500M"
+hardening_sysjournald_runtimemaxuse: "200M"
+hardening_sysjournald_runtimekeepfree: "50M"
+hardening_sysjournald_maxfilesec: "1month"
+# Settings for systemd-journald - advanced
+hardening_sysjournald_forwardtosyslog: "yes"
+hardening_sysjournald_compress: "yes"
+hardening_sysjournald_storage: "persistent"
+
+# Settings for logging
+# If true systemd-journal-upload will be used for log sending (this option has got priority)
+hardening_logging_journal_upload: false
+hardening_journal_upload_packages:
+  - systemd-journal-remote
+hardening_journal_upload_url: "127.0.0.1"
+hardening_journal_upload_serverkey: "/path/to/key/server.key"
+hardening_journal_upload_servercert: "/path/to/cert/server.cert"
+hardening_journal_upload_trustedcert: "/path/to/cert/trusted.cert"
+hardening_journal_upload_timeout: "3min"
+
+# IMPORTANT: If rsyslog is used for collect clients log, then
+# hardening_sysjournald_forwardtosyslog has to be "yes"
+hardening_logging_rsyslog: true
+hardening_rsyslog_packages:
+  - rsyslog
+# If true rsyslog will be used for log sending
+hardening_rsyslog_upload: false
+hardening_rsyslog_target: "127.0.0.1"
+hardening_rsyslog_port: 514
+hardening_rsyslog_protocol: "tcp"
+hardening_rsyslog_resumeretry: 100
+hardening_rsyslog_saveonshutdown: "on"
+hardening_rsyslog_maxdiskspace: "1g"
+# Here you can define path to additional *.conf files for your rsyslog
+# Files from here will be added to /etc/rsyslog.d folder via copy module
+hardening_rsyslog_additional_settings: []
+
 ## 6.2 System Auditing
 hardening_sec06_02: true
 

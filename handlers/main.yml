@@ -80,4 +80,31 @@
   tags:
     - always
 
+- name: Reload systemd-journald.service
+  ansible.builtin.systemd_service:
+    name: systemd-journald.service
+    state: reloaded
+    enabled: true
+    masked: false
+  tags:
+    - always
+
+- name: Reload systemd-journal-upload.service
+  ansible.builtin.systemd_service:
+    name: systemd-journal-upload.service
+    state: reloaded
+    enabled: true
+    masked: false
+  tags:
+    - always
+
+- name: Restart rsyslog.service
+  ansible.builtin.systemd_service:
+    name: rsyslog.service
+    state: restarted
+    enabled: true
+    masked: false
+  tags:
+    - always
+
 ...

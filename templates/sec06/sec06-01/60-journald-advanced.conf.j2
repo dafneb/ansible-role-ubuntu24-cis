@@ -1,0 +1,13 @@
+[Journal]
+{% if not hardening_sysjournald_storage is none -%}
+Storage={{ hardening_sysjournald_storage }}
+{% endif %}
+{% if not hardening_sysjournald_compress is none -%}
+Compress={{ hardening_sysjournald_compress }}
+{% endif %}
+{% if not hardening_sysjournald_forwardtosyslog is none -%}
+ForwardToSyslog={{ hardening_sysjournald_forwardtosyslog }}
+{% endif %}
+#ForwardToKMsg=no
+#ForwardToConsole=no
+#ForwardToWall=yes
