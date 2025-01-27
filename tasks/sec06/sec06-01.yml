@@ -47,6 +47,16 @@
   tags:
     - always
 
+- name: "sec06 | sec06-01 | Create target folder (/etc/systemd/journald.conf.d)"
+  ansible.builtin.file:
+    path: "/etc/systemd/journald.conf.d"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  tags:
+    - always
+
 - name: "sec06 | sec06-01 | Settings for systemd-journald (file rotation)"
   ansible.builtin.template:
     src: sec06/sec06-01/60-journald-rotation.conf.j2
@@ -73,7 +83,7 @@
   ansible.builtin.import_tasks:
     file: sec06/sec06-01/systemd-journal-upload.yml
   when:
-    - hardening_logging_journal_remote
+    - hardening_logging_journal_upload
   tags:
     - always
 
@@ -81,7 +91,7 @@
   ansible.builtin.import_tasks:
     file: sec06/sec06-01/rsyslog.yml
   when:
-    - not hardening_logging_journal_remote
+    - not hardening_logging_journal_upload
     - hardening_logging_rsyslog
   tags:
     - always

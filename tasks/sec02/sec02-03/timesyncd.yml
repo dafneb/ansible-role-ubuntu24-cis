@@ -18,6 +18,8 @@
     path: "{{ hardening_time_timesyncd_path | dirname }}"
     state: directory
     mode: '0755'
+    owner: root
+    group: root
   tags:
     - always
 
