@@ -107,4 +107,20 @@
   tags:
     - always
 
+- name: Restart auditd.service
+  ansible.builtin.systemd_service:
+    name: auditd.service
+    state: restarted
+    enabled: true
+    masked: false
+  tags:
+    - always
+
+- name: Register audit rules
+  ansible.builtin.command:
+    cmd: augenrules --load
+  changed_when: false
+  tags:
+    - always
+
 ...

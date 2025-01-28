@@ -1,0 +1,41 @@
+---
+- name: "sec06-02 | auditd-rules | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec06-02 | auditd-rules | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec06-02 | auditd-rules | Ensure changes to system administration scope (sudoers) is collected"
+  ansible.builtin.template:
+    src: sec06/sec06-02/50-scope.rules.j2
+    dest: /etc/audit/rules.d/50-scope.rules
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Register audit rules
+  tags:
+    - always
+
+- name: "sec06-02 | auditd-rules | Ensure actions as another user are always logged"
+  ansible.builtin.template:
+    src: sec06/sec06-02/50-user_emulation.rules.j2
+    dest: /etc/audit/rules.d/50-user_emulation.rules
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Register audit rules
+  tags:
+    - always
+
+...

@@ -303,6 +303,20 @@ hardening_rsyslog_additional_settings: []
 ## 6.2 System Auditing
 hardening_sec06_02: true
 
+# Auditd service
+hardening_auditd_packages:
+  - auditd
+  - audispd-plugins
+hardening_auditd_backlog: 8192
+hardening_auditd_maxlogfile: 25
+hardening_auditd_maxlogfileaction: "keep_logs"
+hardening_auditd_diskfullaction: "single"
+hardening_auditd_diskerroraction: "single"
+hardening_auditd_spaceleft: 75
+hardening_auditd_spaceleftaction: "syslog"
+hardening_auditd_adminspaceleft: 50
+hardening_auditd_adminspaceleftaction: "single"
+
 ## 6.3 Configure Integrity Checking
 hardening_sec06_03: true
 

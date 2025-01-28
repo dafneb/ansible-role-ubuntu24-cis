@@ -16,4 +16,89 @@
   tags:
     - always
 
+- name: "sec06 | sec06-02 | Run update_cache"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ hardening_updates_cache_valid_time }}"
+  when: not hardening_sec01_02
+  tags:
+    - always
+
+- name: "sec06 | sec06-02 | Install auditd packages"
+  ansible.builtin.apt:
+    pkg: "{{ hardening_auditd_packages }}"
+  tags:
+    - always
+
+- name: "sec06 | sec06-02 | Get grub cmdline"
+  ansible.builtin.command:
+    cmd: grep 'GRUB_CMDLINE_LINUX=' /etc/default/grub
+  changed_when: false
+  register: grub_content
+
+- name: "sec06 | sec06-02 | Adjust GRUB file - audit=1 (replace)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX=\"(.*)audit=\d(.*)\"$'
+    line: 'GRUB_CMDLINE_LINUX="\1audit=1\2"'
+    backrefs: true
+  when:
+    - grub_content.stdout is search("audit=")
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec06 | sec06-02 | Adjust GRUB file - audit=1 (create)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=\".*)\"$'
+    line: '\1 audit=1"'
+    backrefs: true
+  when:
+    - grub_content.stdout is not search("audit=")
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec06 | sec06-02 | Adjust GRUB file - audit_backlog_limit=x (replace)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX=\"(.*)audit_backlog_limit=\d+(.*)\"$'
+    line: 'GRUB_CMDLINE_LINUX="\1audit_backlog_limit={{ hardening_auditd_backlog | int }}\2"'
+    backrefs: true
+  when:
+    - grub_content.stdout is search("audit_backlog_limit=")
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec06 | sec06-02 | Adjust GRUB file - audit_backlog_limit=x (create)"
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=\".*)\"$'
+    line: '\1 audit_backlog_limit={{ hardening_auditd_backlog | int }}"'
+    backrefs: true
+  when:
+    - grub_content.stdout is not search("audit_backlog_limit=")
+  notify: Grub update
+  tags:
+    - always
+
+- name: "sec06 | sec06-02 | Adjust auditd service settings"
+  ansible.builtin.template:
+    src: sec06/sec06-02/auditd.conf.j2
+    dest: /etc/audit/auditd.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Restart auditd.service
+  tags:
+    - always
+
+- name: "sec06 | sec06-02 | Import task for rules"
+  ansible.builtin.import_tasks:
+    file: sec06/sec06-02/auditd-rules.yml
+  tags:
+    - always
+
 ...
