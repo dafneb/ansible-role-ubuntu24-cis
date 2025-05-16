@@ -7,6 +7,9 @@
 ![GitHub contributors](https://img.shields.io/github/contributors/dafneb/ansible-role-ubuntu24-cis)
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dafneb/ansible-role-ubuntu24-cis/ansible-lint.yml?label=ansible-lint)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dafneb/ansible-role-ubuntu24-cis/codeql.yml?label=CodeQL)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/dafneb/ansible-role-ubuntu24-cis/badge)](https://scorecard.dev/viewer/?uri=github.com/dafneb/ansible-role-ubuntu24-cis)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/dafneb/ansible-role-ubuntu24-cis/main.svg)](https://results.pre-commit.ci/latest/github/dafneb/ansible-role-ubuntu24-cis/main)
 
 This role is designed as application of hardening and security rules to Ubuntu 24.
 
