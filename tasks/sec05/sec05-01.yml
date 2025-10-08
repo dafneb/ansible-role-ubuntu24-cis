@@ -16,4 +16,85 @@
   tags:
     - always
 
+- name: "sec05 | sec05-01 | Permissions on file /etc/ssh/sshd_config"
+  ansible.builtin.template:
+    src: sec05/sec05-01/sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    mode: '0600'
+    owner: root
+    group: root
+  tags:
+    - always
+
+- name: "sec05 | sec05-01 | Get list of files at folder /etc/ssh/sshd_config.d"
+  ansible.builtin.find:
+    paths: /etc/ssh/sshd_config.d
+    patterns: '*.conf'
+  register: ssh_conf_files
+  tags:
+    - always
+
+- name: "sec05 | sec05-01 | Permissions on files at folder /etc/ssh/sshd_config.d"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: file
+    mode: '0600'
+    owner: root
+    group: root
+  tags:
+    - always
+  loop: "{{ ssh_conf_files.files }}"
+
+- name: "sec05 | sec05-01 | Get list of files at folder /etc/ssh"
+  ansible.builtin.find:
+    paths: /etc/ssh
+    follow: true
+  register: ssh_files
+  tags:
+    - always
+
+- name: "sec05 | sec05-01 | Check if group ssh_keys exists"
+  ansible.builtin.command: grep -Pq -- '^\h*ssh_keys\:' /etc/group
+  register: ssh_keys_group_res
+  failed_when: false
+  changed_when: ssh_keys_group_res.rc == 0
+  tags:
+    - always
+
+- name: "sec05 | sec05-01 | Check if group _ssh exists"
+  ansible.builtin.command: grep -Pq -- '^\h*_ssh\:' /etc/group
+  register: ssh_01_group_res
+  failed_when: false
+  changed_when: ssh_01_group_res.rc == 0
+  tags:
+    - always
+
+- name: "sec05 | sec05-01 | Check if group ssh exists"
+  ansible.builtin.command: grep -Pq -- '^\h*ssh\:' /etc/group
+  register: ssh_02_group_res
+  failed_when: false
+  changed_when: ssh_02_group_res.rc == 0
+  tags:
+    - always
+
+- name: "sec05 | sec05-01 | SSH private host keys"
+  ansible.builtin.include_tasks:
+    file: sec05/sec05-01/ssh-private-host-keys.yml
+  tags:
+    - always
+  loop: "{{ ssh_files.files }}"
+
+- name: "sec05 | sec05-01 | SSH public host keys"
+  ansible.builtin.include_tasks:
+    file: sec05/sec05-01/ssh-public-host-keys.yml
+  tags:
+    - always
+  loop: "{{ ssh_files.files }}"
+
+- name: "sec05 | sec05-01 | Settings inside sshd_config"
+  ansible.builtin.import_tasks:
+    file: sec05/sec05-01/sshd-config-settings.yml
+  tags:
+    - always
+
 ...

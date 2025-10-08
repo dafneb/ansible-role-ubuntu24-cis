@@ -26,23 +26,23 @@
   tags:
     - always
 
-- name: "sec01 | sec01-06 | Delete dynamic message of the day ({{ hardening_motd_dynamic_path }})"
-  ansible.builtin.file:
-    path: "{{ hardening_motd_dynamic_path }}/"
-    state: absent
+- name: "sec01 | sec01-06 | Get content dynamic message of the day folder ({{ hardening_motd_dynamic_path }})"
+  ansible.builtin.find:
+    paths: "{{ hardening_motd_dynamic_path }}"
+    follow: true
+  register: motd_files
   when: hardening_motd_dynamic_erase
   tags:
     - always
 
-- name: "sec01 | sec01-06 | Create a directory if it does not exist ({{ hardening_motd_dynamic_path }})"
+- name: "sec01 | sec01-06 | Delete dynamic message of the day ({{ hardening_motd_dynamic_path }})"
   ansible.builtin.file:
-    path: "{{ hardening_motd_dynamic_path }}"
-    state: directory
-    mode: '0755'
-    owner: root
-    group: root
+    path: "{{ item.path }}"
+    state: absent
+  when: hardening_motd_dynamic_erase
   tags:
     - always
+  loop: "{{ motd_files.files }}"
 
 - name: "sec01 | sec01-06 | Create local login banner ({{ hardening_local_issue_path }})"
   ansible.builtin.template:

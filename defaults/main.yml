@@ -240,6 +240,11 @@ hardening_sec04_04: false
 
 ## 5.1 Configure SSH Server
 hardening_sec05_01: true
+hardening_ssh_allow_users:
+  - ansible
+hardening_ssh_allow_groups:
+hardening_ssh_deny_users:
+hardening_ssh_deny_groups:
 
 ## 5.2 Configure privilege escalation
 hardening_sec05_02: true

@@ -1,0 +1,110 @@
+---
+- name: "sec05-01 | ssh-private-host-keys | Check OS family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu. {{ ansible_facts.distribution }} is not supported."
+  when:
+    - ansible_facts.distribution != 'Ubuntu'
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Check OS version and family"
+  ansible.builtin.fail:
+    msg: "This role can only be run against Ubuntu 24. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+    - ansible_facts.distribution_major_version is version_compare('24', '!=')
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Check file {{ item.path }}"
+  ansible.builtin.command:
+    argv:
+      - ssh-keygen
+      - -lf
+      - "{{ item.path }}"
+  register: check_file
+  failed_when: false
+  changed_when: false
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Get file description {{ item.path }}"
+  ansible.builtin.command:
+    argv:
+      - file
+      - "{{ item.path }}"
+  register: description_file
+  failed_when: false
+  changed_when: false
+  when:
+    - check_file.rc == 0
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Check file description {{ item.path }}"
+  ansible.builtin.set_fact:
+    regex_output: "{{ description_file.stdout | regex_search('\\bopenssh\\s+([^#\\n\\r]+\\s+)?private\\s+key\\b', multiline=True, ignorecase=True) }}"
+  when:
+    - check_file.rc == 0
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Set owner (root) and group (root) on {{ item.path }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: file
+    mode: '0600'
+    owner: root
+    group: root
+  when:
+    - check_file.rc == 0
+    - regex_output != ""
+    - ssh_keys_group_res is not changed
+    - ssh_01_group_res is not changed
+    - ssh_02_group_res is not changed
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Set owner (root) and group (ssh_keys) on {{ item.path }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: file
+    mode: '0640'
+    owner: root
+    group: ssh_keys
+  when:
+    - check_file.rc == 0
+    - regex_output != ""
+    - ssh_keys_group_res is changed
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Set owner (root) and group (_ssh) on {{ item.path }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: file
+    mode: '0640'
+    owner: root
+    group: _ssh
+  when:
+    - check_file.rc == 0
+    - regex_output != ""
+    - ssh_01_group_res is changed
+  tags:
+    - always
+
+- name: "sec05-01 | ssh-private-host-keys | Set owner (root) and group (ssh) on {{ item.path }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: file
+    mode: '0640'
+    owner: root
+    group: ssh
+  when:
+    - check_file.rc == 0
+    - regex_output != ""
+    - ssh_02_group_res is changed
+  tags:
+    - always
+
+...

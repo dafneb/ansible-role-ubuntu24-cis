@@ -170,5 +170,8 @@ cython_debug/
 # Visual Studio Code
 .vscode
 
+# Ansible
+.ansible
+
 # My notes 
 notes.txt
