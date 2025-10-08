@@ -173,5 +173,11 @@ cython_debug/
 # Ansible
 .ansible
 
-# My notes 
+# My notes
 notes.txt
+
+# Snyk Security
+.dcignore
+
+# Ansible
+.ansible/
